@@ -1,4 +1,4 @@
-const chats = [
+module.exports = chats = [
   {
     isGroupChat: false,
     users: [

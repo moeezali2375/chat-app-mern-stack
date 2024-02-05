@@ -1,6 +1,6 @@
 const express = require("express");
 require("dotenv").config();
-const { chats } = require("./data/data");
+const chats = require("./data/data");
 const app = express();
 
 const PORT = process.env.PORT;
@@ -10,7 +10,6 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/chat", (req, res) => {
-  console.log(chats);
   res.send(chats);
 });
 
