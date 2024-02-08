@@ -13,13 +13,13 @@ import {
 import axios from "axios";
 
 const Signup = () => {
-  const [show, setShow] = useState();
+  const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const [pic, setPic] = useState();
-  const [loading, setLoading] = useState();
   const toast = useToast();
   const history = useHistory();
 
@@ -77,7 +77,7 @@ const Signup = () => {
     setLoading(true);
     if (!name || !email || !password || !confirmPassword) {
       toast({
-        title: "Please fill all the feilds!",
+        title: "Please fill all the fields!",
         status: "warning",
         duration: 5000,
         isClosable: true,
@@ -120,7 +120,7 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
-      localStorage.setItem("userInfo", JSON.stringify.apply(data));
+      localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
       history.push("/chats");
     } catch (error) {
