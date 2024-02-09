@@ -50,4 +50,19 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, authUser };
+const allUsers = asyncHandler(async (req, res) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+          //HELP search for pattern like name or email just as in SQL
+        ],
+      }
+    : {}; // else return an empty object;
+  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+  //HELP find users but not him/her, self
+  res.send(users);
+});
+
+module.exports = { registerUser, authUser, allUsers };
