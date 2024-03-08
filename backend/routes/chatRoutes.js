@@ -19,8 +19,8 @@ router.post("/group", protect, createGroupChat);
 
 router.put("/rename", protect, renameGroup);
 
-router.put("/groupremove", protect, removeFromGroup);
-
 router.put("/groupadd", protect, addToGroup);
+
+router.put("/groupremove", protect, removeFromGroup);
 
 module.exports = router;
