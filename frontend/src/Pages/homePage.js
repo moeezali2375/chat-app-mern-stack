@@ -17,11 +17,9 @@ function Homepage() {
   const history = useHistory();
 
   useEffect(() => {
-    const check = localStorage.getItem("userInfo");
-    if (check) {
-      const user = JSON.parse(check);
-      if (user) history.push("/chats");
-    }
+    const user = JSON.parse(localStorage.getItem("userInfo"));
+
+    if (user) history.push("/chats");
   }, [history]);
 
   return (

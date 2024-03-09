@@ -12,16 +12,11 @@ const ChatProvider = ({ children }) => {
   const history = useHistory();
 
   useEffect(() => {
-    const check = localStorage.getItem("userInfo");
-    if (check) {
-      const userInfo = JSON.parse(check);
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    setUser(userInfo);
 
-      if (!userInfo) {
-        history.push("/");
-      } else {
-        setUser(userInfo);
-      }
-    }
+    if (!userInfo) history.push("/");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history]);
 
   return (
