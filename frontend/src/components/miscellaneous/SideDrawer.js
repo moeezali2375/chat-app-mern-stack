@@ -61,7 +61,7 @@ function SideDrawer() {
       toast({
         title: "Please Enter something in search",
         status: "warning",
-        duration: 5000,
+        duration: 1000,
         isClosable: true,
         position: "top-left",
       });
@@ -78,7 +78,8 @@ function SideDrawer() {
       };
 
       const { data } = await axios.get(`/api/user?search=${search}`, config);
-
+      console.log("hehe");
+      console.log(data);
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
@@ -142,7 +143,7 @@ function SideDrawer() {
           </Button>
         </Tooltip>
         <Text fontSize="2xl" fontFamily="Work sans">
-          Talk-A-Tive
+          Jutt-Chats
         </Text>
         <div>
           <Menu>
@@ -200,10 +201,13 @@ function SideDrawer() {
                 placeholder="Search by name or email"
                 mr={2}
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  if (search) handleSearch(); // Call handleSearch whenever input changes
+                }}
               />
-              <Button onClick={handleSearch}>Go</Button>
             </Box>
+
             {loading ? (
               <ChatLoading />
             ) : (
