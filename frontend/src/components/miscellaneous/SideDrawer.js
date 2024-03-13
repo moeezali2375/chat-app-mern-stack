@@ -56,15 +56,10 @@ function SideDrawer() {
     history.push("/");
   };
 
-  const handleSearch = async () => {
-    if (!search) {
-      toast({
-        title: "Please Enter something in search",
-        status: "warning",
-        duration: 1000,
-        isClosable: true,
-        position: "top-left",
-      });
+  const handleSearch = async (query) => {
+    setSearch(query);
+
+    if (!query) {
       return;
     }
 
@@ -95,8 +90,6 @@ function SideDrawer() {
   };
 
   const accessChat = async (userId) => {
-    console.log(userId);
-
     try {
       setLoadingChat(true);
       const config = {
@@ -202,8 +195,7 @@ function SideDrawer() {
                 mr={2}
                 value={search}
                 onChange={(e) => {
-                  setSearch(e.target.value);
-                  if (search) handleSearch(); // Call handleSearch whenever input changes
+                  handleSearch(e.target.value); // Call handleSearch whenever input changes
                 }}
               />
             </Box>
