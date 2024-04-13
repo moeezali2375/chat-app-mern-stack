@@ -153,8 +153,9 @@ function SideDrawer() {
                 <MenuItem
                   key={notif._id}
                   onClick={() => {
+                    console.log(notif);
                     setSelectedChat(notif.chat);
-                    setNotification(notification.filter((n) => n !== notif));
+                    setNotification(notification.filter((n) => n.chat._id !== notif.chat._id));
                   }}
                 >
                   {notif.chat.isGroupChat

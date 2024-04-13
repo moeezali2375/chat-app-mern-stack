@@ -55,6 +55,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         config
       );
       setMessages(data);
+      setNotification(notification.filter((n) => n.chat._id !== selectedChat._id));
       setLoading(false);
 
       socket.emit("join chat", selectedChat._id);
@@ -233,7 +234,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     options={defaultOptions}
                     // height={50}
                     width={70}
-                    style={{ marginBottom: 15, marginLeft: 0 }}
+                    style={{ marginBottom: 0, marginLeft: 0 }}
                   />
                 </div>
               ) : (
