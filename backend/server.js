@@ -41,7 +41,7 @@ const server = app.listen(PORT, () => {
 const io = require("socket.io")(server, {
   cors: {
     pingTimeout: 30000, //HELP time to wait to close the socket after being inactive
-    origin: "http://localhost:3000",
+    origin: "http://127.0.0.1:3000",
   },
 });
 
