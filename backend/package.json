@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "npm install --legacy-peer-deps && cd ../frontend && npm install --legacy-peer-deps && npm audit fix && npm audit fix --force && npm run build"
+    "build": "npm install --legacy-peer-deps && cd ../frontend && npm install --legacy-peer-deps && npm run build"
   },
   "keywords": [],
   "author": "",
