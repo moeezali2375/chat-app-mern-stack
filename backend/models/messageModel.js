@@ -14,6 +14,10 @@ const messageModel = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Chat",
     },
+    isEdited: {
+      type: Boolean,
+      default: 0,
+    },
   },
   {
     timestamps: true,

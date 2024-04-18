@@ -70,7 +70,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       });
     }
   };
-
+//! TODO
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
       socket.emit("stop typing", selectedChat._id);
