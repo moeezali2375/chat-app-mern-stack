@@ -80,4 +80,23 @@ const allMessages = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { sendMessage, allMessages, editMessage };
+const deleteMessage = asyncHandler(async (req, res) => {
+  const { chatId, messageId } = req.body;
+
+  if (!messageId || !chatId) {
+    console.log("Invalid data passed into request");
+    return res.sendStatus(400);
+  }
+  try {
+    const message = await Message.findByIdAndDelete(messageId);
+    console.log(message);
+    let messages = await Message.find({ chat: chatId });
+    res.json(messages);
+    res.status(200).send("Message deleted successfully!");
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+});
+
+module.exports = { sendMessage, allMessages, editMessage, deleteMessage };
