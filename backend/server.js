@@ -20,9 +20,13 @@ app.use("/api/message", messageRoutes);
 const __dirname1 = path.resolve();
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(path.dirname(__dirname1), "frontend", "build")));
+  app.use(
+    express.static(path.join(path.dirname(__dirname1), "frontend", "build"))
+  );
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(path.dirname(__dirname1), "frontend", "build", "index.html"));
+    res.sendFile(
+      path.resolve(path.dirname(__dirname1), "frontend", "build", "index.html")
+    );
   });
 } else {
   app.get("/", (req, res) => {
@@ -41,7 +45,7 @@ const server = app.listen(PORT, () => {
 const io = require("socket.io")(server, {
   cors: {
     pingTimeout: 30000, //HELP time to wait to close the socket after being inactive
-    origin: "http://127.0.0.1:3000",
+    origin: "http://localhost:3000",
   },
 });
 
