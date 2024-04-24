@@ -37,7 +37,7 @@ const sendMessage = asyncHandler(async (req, res) => {
 });
 
 const editMessage = asyncHandler(async (req, res) => {
-  const { content, chatId, messageId } = req.body;
+  const { content, chatId, messageId, senderId } = req.body;
 
   if (!content || !chatId || !messageId) {
     console.log("Invalid data passed into request");
@@ -45,7 +45,7 @@ const editMessage = asyncHandler(async (req, res) => {
   }
   try {
     let message = await Message.findOneAndUpdate(
-      { _id: messageId, isEdited: false },
+      { _id: messageId, isEdited: false, sender: senderId },
       { content: content, isEdited: true },
       { new: true }
     );
@@ -81,18 +81,23 @@ const allMessages = asyncHandler(async (req, res) => {
 });
 
 const deleteMessage = asyncHandler(async (req, res) => {
-  const { chatId, messageId } = req.body;
+  const { chatId, messageId, senderId } = req.body;
 
   if (!messageId || !chatId) {
     console.log("Invalid data passed into request");
     return res.sendStatus(400);
   }
   try {
-    const message = await Message.findByIdAndDelete(messageId);
-    console.log(message);
-    let messages = await Message.find({ chat: chatId });
-    res.json(messages);
-    res.status(200).send("Message deleted successfully!");
+    let message = await Message.findOneAndDelete({
+      _id: messageId,
+      chat: chatId,
+      sender: senderId,
+    });
+    if (message) {
+      return res.status(200).send("Message deleted successfully!");
+    } else {
+      return res.status(404).send("No such message found");
+    }
   } catch (error) {
     res.status(400);
     throw new Error(error.message);
