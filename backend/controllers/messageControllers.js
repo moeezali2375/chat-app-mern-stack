@@ -57,6 +57,7 @@ const editMessage = asyncHandler(async (req, res) => {
         select: "name pic email",
       });
       res.status(200).json(message);
+      return;
     } else {
       res.status(404).send("Message is already updated or invalid ids!");
       return;
