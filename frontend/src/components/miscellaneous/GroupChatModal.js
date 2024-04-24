@@ -99,28 +99,28 @@ const GroupChatModal = ({ children }) => {
         `/api/chat/group`,
         {
           name: groupChatName,
-          users: JSON.stringify(selectedUsers.map((u) => u._id)),
+          users: selectedUsers.map((u) => u._id),
         },
         config
       );
       setChats([data, ...chats]);
       onClose();
-      toast({
-        title: "New Group Chat Created!",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
+      // toast({
+      //   title: "New Group Chat Created!",
+      //   status: "success",
+      //   duration: 5000,
+      //   isClosable: true,
+      //   position: "bottom",
+      // });
     } catch (error) {
-      toast({
-        title: "Failed to Create the Chat!",
-        description: error.response.data,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
+      // toast({
+      //   title: "Failed to Create the Chat!",
+      //   description: error.response.data,
+      //   status: "error",
+      //   duration: 5000,
+      //   isClosable: true,
+      //   position: "bottom",
+      // });
     }
   };
 
@@ -165,7 +165,6 @@ const GroupChatModal = ({ children }) => {
               ))}
             </Box>
             {loading ? (
-              // <ChatLoading />
               <div>Loading...</div>
             ) : (
               searchResult
