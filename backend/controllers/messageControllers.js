@@ -56,8 +56,9 @@ const editMessage = asyncHandler(async (req, res) => {
         path: "chat.users",
         select: "name pic email",
       });
+      res.status(200).json(message);
     } else {
-      res.send("Message is already updated");
+      res.status(404).send("Message is already updated or invalid ids!");
       return;
     }
     res.json(message);
@@ -72,7 +73,6 @@ const allMessages = asyncHandler(async (req, res) => {
     let messages = await Message.find({ chat: req.params.chatId })
       .populate("sender", "name email pic")
       .populate("chat");
-
     res.json(messages);
   } catch (error) {
     res.status(400);
