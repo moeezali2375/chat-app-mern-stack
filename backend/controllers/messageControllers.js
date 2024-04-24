@@ -62,7 +62,6 @@ const editMessage = asyncHandler(async (req, res) => {
       res.status(404).send("Message is already updated or invalid ids!");
       return;
     }
-    res.json(message);
   } catch (error) {
     res.status(400);
     throw new Error(error.message);
