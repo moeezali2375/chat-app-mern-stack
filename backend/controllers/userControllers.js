@@ -65,4 +65,24 @@ const allUsers = asyncHandler(async (req, res) => {
   res.send(users);
 });
 
-module.exports = { registerUser, authUser, allUsers };
+const changePassword = asyncHandler(async (req, res) => {
+  const { oldPass, newPass } = req.body;
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      throw new Error("Change your own password bruh!");
+    }
+    if (await user.matchPassword(oldPass)) {
+      user.password = newPass;
+      await user.save(); // Trigger the pre('save') hook
+    } else {
+      throw new Error("Your old password does not match");
+    }
+    res.status(200).send("Password changed successfully!");
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
+module.exports = { registerUser, authUser, allUsers, changePassword };
+
