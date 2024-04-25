@@ -84,5 +84,24 @@ const changePassword = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, authUser, allUsers, changePassword };
+const checkEmail = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email: email });
+    if (user) {
+      throw new Error("Email already registered!");
+    } else {
+      res.status(200).send("Unique Email!");
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
 
+module.exports = {
+  registerUser,
+  authUser,
+  allUsers,
+  changePassword,
+  checkEmail,
+};
