@@ -17,7 +17,7 @@ import {
   DrawerOverlay,
 } from "@chakra-ui/modal";
 import { Tooltip } from "@chakra-ui/tooltip";
-import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { BellIcon, ChevronDownIcon,SettingsIcon } from "@chakra-ui/icons";
 import { Avatar } from "@chakra-ui/avatar";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
@@ -26,6 +26,7 @@ import { useToast } from "@chakra-ui/toast";
 import ChatLoading from "../ChatLoading";
 import { Spinner } from "@chakra-ui/spinner";
 import ProfileModal from "./ProfileModal";
+import FormModal from "./FormModal";
 import NotificationBadge from "react-notification-badge";
 import { Effect } from "react-notification-badge";
 import { getSender } from "../../config/ChatLogics";
@@ -46,6 +47,7 @@ function SideDrawer() {
     chats,
     setChats,
   } = ChatState();
+  console.log(user);
 
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -139,6 +141,20 @@ function SideDrawer() {
           Jutt-Chats
         </Text>
         <div>
+          <Menu>
+            <MenuButton as={Button} bg="white">
+              <SettingsIcon fontSize="2xl" m={1}/>
+            </MenuButton>
+            <MenuList>
+              <FormModal user={user} type='email'>
+                <MenuItem>Change Email</MenuItem>{" "}
+              </FormModal>
+              <MenuDivider />
+              <FormModal user={user} type='password'>
+                <MenuItem>Change Password</MenuItem>{" "}
+              </FormModal>
+            </MenuList>
+          </Menu>
           <Menu>
             <MenuButton p={1}>
               <NotificationBadge
