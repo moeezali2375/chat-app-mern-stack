@@ -103,7 +103,11 @@ const changeEmail = asyncHandler(async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (await user.matchPassword(password)) {
-      await User.findByIdAndUpdate(req.user._id, { email: email },{new:true});
+      await User.findByIdAndUpdate(
+        req.user._id,
+        { email: email },
+        { new: true }
+      );
     } else {
       throw new Error("Your password does not match!");
     }
