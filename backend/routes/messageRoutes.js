@@ -5,16 +5,20 @@ const {
   allMessages,
   editMessage,
   deleteMessage,
+  predictMessage,
 } = require("../controllers/messageControllers");
 
 const router = express.Router();
 
 router.post("/", protect, sendMessage);
 
+router.get("/predict",protect,predictMessage)
+
 router.get("/:chatId", protect, allMessages);
 
 router.post("/edit", protect, editMessage);
 
 router.delete("/", protect, deleteMessage);
+
 
 module.exports = router;

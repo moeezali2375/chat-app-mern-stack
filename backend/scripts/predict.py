@@ -33,8 +33,8 @@ def transform_text(text):
 
     return " ".join(y)
 
-tfidf = pickle.load(open('vectorizer.pkl','rb'))
-model = pickle.load(open('model.pkl','rb'))
+tfidf = pickle.load(open('./ml_models/vectorizer.pkl','rb'))
+model = pickle.load(open('./ml_models/model.pkl','rb'))
 
  # 1. preprocess
 transformed_sms = transform_text(sys.argv[1])

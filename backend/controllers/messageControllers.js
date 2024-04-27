@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Message = require("../models/messageModel");
 const User = require("../models/userModel");
 const Chat = require("../models/chatModel");
+const { executePython } = require("../services/pythonBridge");
 
 const sendMessage = asyncHandler(async (req, res) => {
   const { content, chatId } = req.body;
@@ -104,4 +105,20 @@ const deleteMessage = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { sendMessage, allMessages, editMessage, deleteMessage };
+const predictMessage = asyncHandler(async (req, res) => {
+  const { message } = req.body;
+  try {
+    const result = await executePython("./scripts/predict.py", [message]);
+    res.status(200).json({ spam: result });
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
+module.exports = {
+  sendMessage,
+  allMessages,
+  editMessage,
+  deleteMessage,
+  predictMessage,
+};
