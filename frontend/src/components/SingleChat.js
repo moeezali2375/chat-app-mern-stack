@@ -25,6 +25,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
   const [istyping, setIsTyping] = useState(false);
+  const [updateMsg, setUpdateMsg] = useState(null);
   const toast = useToast();
 
   const defaultOptions = {
@@ -115,6 +116,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("stop typing", () => setIsTyping(false));
 
     // eslint-disable-next-line
+
+    // setUpdateMsg(null);
   }, []);
 
   useEffect(() => {
@@ -159,6 +162,57 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setTyping(false);
       }
     }, timerLength);
+  };
+
+  const editHandler = async (event) => {
+    if (event.key === "Enter" && newMessage) {
+      console.log(messages);
+
+      const content = newMessage;
+      const chatId = updateMsg.chat._id;
+      const messageId = updateMsg._id;
+      const senderId = updateMsg.sender._id;
+
+      try {
+        //   setLoading(true);
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        };
+
+        // const content = "hello";
+        const { data } = await axios.post(
+          `/api/message/edit`,
+          { content, chatId, messageId, senderId },
+          config
+        );
+
+        toast({
+          title: "Message Edited Successfully",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+        setUpdateMsg(null);
+        setNewMessage("");
+        fetchMessages();
+        // setMessages([...messages, data]);
+      } catch (error) {
+        toast({
+          title: "Error Occured!",
+          // description: "Failed to Load the Search Results",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-left",
+        });
+        setUpdateMsg(null);
+        setNewMessage("");
+      }
+    }
   };
 
   return (
@@ -220,12 +274,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               />
             ) : (
               <div className="messages">
-                <ScrollableChat messages={messages} />
+                <ScrollableChat
+                  messages={messages}
+                  setUpdateMsg={setUpdateMsg}
+                  setNewMsg={setNewMessage}
+                />
               </div>
             )}
 
             <FormControl
-              onKeyDown={sendMessage}
+              onKeyDown={updateMsg ? editHandler : sendMessage}
               id="first-name"
               isRequired
               mt={3}
@@ -242,13 +300,23 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               ) : (
                 <></>
               )}
-              <Input
-                variant="filled"
-                bg="#E0E0E0"
-                placeholder="Enter a message.."
-                value={newMessage}
-                onChange={typingHandler}
-              />
+              {updateMsg ? (
+                <Input
+                  variant="filled"
+                  bg="#E0E0E0"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)
+                  }
+                />
+              ) : (
+                <Input
+                  variant="filled"
+                  bg="#E0E0E0"
+                  placeholder="Enter a message.."
+                  value={newMessage}
+                  onChange={typingHandler}
+                />
+              )}
             </FormControl>
           </Box>
         </>

@@ -17,7 +17,7 @@ import {
   DrawerOverlay,
 } from "@chakra-ui/modal";
 import { Tooltip } from "@chakra-ui/tooltip";
-import { BellIcon, ChevronDownIcon,SettingsIcon } from "@chakra-ui/icons";
+import { BellIcon, ChevronDownIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Avatar } from "@chakra-ui/avatar";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
@@ -143,14 +143,14 @@ function SideDrawer() {
         <div>
           <Menu>
             <MenuButton as={Button} bg="white">
-              <SettingsIcon fontSize="2xl" m={1}/>
+              <SettingsIcon fontSize="2xl" m={1} />
             </MenuButton>
             <MenuList>
-              <FormModal user={user} type='email'>
+              <FormModal user={user} type="email">
                 <MenuItem>Change Email</MenuItem>{" "}
               </FormModal>
               <MenuDivider />
-              <FormModal user={user} type='password'>
+              <FormModal user={user} type="password">
                 <MenuItem>Change Password</MenuItem>{" "}
               </FormModal>
             </MenuList>
@@ -171,7 +171,9 @@ function SideDrawer() {
                   onClick={() => {
                     console.log(notif);
                     setSelectedChat(notif.chat);
-                    setNotification(notification.filter((n) => n.chat._id !== notif.chat._id));
+                    setNotification(
+                      notification.filter((n) => n.chat._id !== notif.chat._id)
+                    );
                   }}
                 >
                   {notif.chat.isGroupChat
