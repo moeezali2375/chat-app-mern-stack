@@ -85,7 +85,7 @@ const changePassword = asyncHandler(async (req, res) => {
 });
 
 const checkEmail = asyncHandler(async (req, res) => {
-  const { email } = req.body;
+  const email  = req.query.email;
   try {
     const user = await User.findOne({ email: email });
     if (user) {
