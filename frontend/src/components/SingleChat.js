@@ -19,7 +19,7 @@ const ENDPOINT = "http://localhost:4000";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
-  const [messages, setMessages] = useState([]);
+  let [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const [socketConnected, setSocketConnected] = useState(false);
@@ -166,7 +166,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const editHandler = async (event) => {
     if (event.key === "Enter" && newMessage) {
-      console.log(messages);
+      // console.log(messages);
 
       const content = newMessage;
       const chatId = updateMsg.chat._id;
@@ -183,7 +183,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         };
 
         // const content = "hello";
-        const { data } = await axios.post(
+        const { data } = await axios.put(
           `/api/message/edit`,
           { content, chatId, messageId, senderId },
           config
@@ -198,16 +198,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         });
         setUpdateMsg(null);
         setNewMessage("");
-        fetchMessages();
-        // setMessages([...messages, data]);
+        //TODO
+        messages= messages.filter(message => message.id !== updateMsg._id);
+        setMessages([...messages, data]);
       } catch (error) {
         toast({
-          title: "Error Occured!",
+          title: "You can only edit a message one time!",
           // description: "Failed to Load the Search Results",
           status: "error",
           duration: 5000,
           isClosable: true,
-          position: "bottom-left",
+          position: "bottom",
         });
         setUpdateMsg(null);
         setNewMessage("");

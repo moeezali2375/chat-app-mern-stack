@@ -16,7 +16,7 @@ router.get("/predict",protect,predictMessage)
 
 router.get("/:chatId", protect, allMessages);
 
-router.post("/edit", protect, editMessage);
+router.put("/edit", protect, editMessage);
 
 router.delete("/", protect, deleteMessage);
 
