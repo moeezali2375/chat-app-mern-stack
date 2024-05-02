@@ -142,6 +142,22 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     });
   });
+  
+  useEffect(() => {
+    socket.on("edit message recieved", (newMessageRecieved,updatedMessages) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageRecieved.chat._id
+      ) {
+        if (!notification.includes(newMessageRecieved)) {
+          setNotification([newMessageRecieved, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
+      } else {
+        setMessages([...updatedMessages,newMessageRecieved]);
+      }
+    });
+  });
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
@@ -166,23 +182,18 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const editHandler = async (event) => {
     if (event.key === "Enter" && newMessage) {
-      // console.log(messages);
-
       const content = newMessage;
       const chatId = updateMsg.chat._id;
       const messageId = updateMsg._id;
       const senderId = updateMsg.sender._id;
 
       try {
-        //   setLoading(true);
-
         const config = {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         };
 
-        // const content = "hello";
         const { data } = await axios.put(
           `/api/message/edit`,
           { content, chatId, messageId, senderId },
@@ -199,8 +210,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setUpdateMsg(null);
         setNewMessage("");
         //TODO
-        messages= messages.filter(message => message.id !== updateMsg._id);
+        messages = messages.filter((message) => message._id !== updateMsg._id);
         setMessages([...messages, data]);
+        socket.emit("edit message send",data,messages);
       } catch (error) {
         toast({
           title: "You can only edit a message one time!",
@@ -306,8 +318,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                   variant="filled"
                   bg="#E0E0E0"
                   value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)
-                  }
+                  onChange={(e) => setNewMessage(e.target.value)}
                 />
               ) : (
                 <Input
