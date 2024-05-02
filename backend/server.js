@@ -70,6 +70,17 @@ io.on("connection", (socket) => {
       socket.in(user._id).emit("message recieved", newMessageRecieved);
     });
   });
+  
+  socket.on("edit message send", (newMessageRecieved,messages) => {
+    var chat = newMessageRecieved.chat;
+    if (!chat.users) return console.log("chat.users not defined");
+    chat.users.forEach((user) => {
+      if (user._id == newMessageRecieved.sender._id) return;
+      // console.log(messages);
+      // console.log(newMessageRecieved);
+      socket.in(user._id).emit("edit message recieved", newMessageRecieved,messages);
+    });
+  });
 
   socket.on("typing", (room) => socket.in(room).emit("typing"));
   socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
