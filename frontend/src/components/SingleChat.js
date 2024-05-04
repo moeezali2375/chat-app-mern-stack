@@ -2,7 +2,7 @@ import { FormControl } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
 import { Box, Text } from "@chakra-ui/layout";
 import "./styles.css";
-import { IconButton, Spinner, useToast } from "@chakra-ui/react";
+import { IconButton, Spinner, useToast , Button , InputGroup, InputRightElement} from "@chakra-ui/react";
 import { getSender, getSenderFull } from "../config/ChatLogics";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -26,6 +26,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [typing, setTyping] = useState(false);
   const [istyping, setIsTyping] = useState(false);
   const [updateMsg, setUpdateMsg] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [highlightedMessages, setHighlightedMessages] = useState([]);
   const toast = useToast();
 
   const defaultOptions = {
@@ -72,6 +74,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         position: "bottom",
       });
     }
+  };
+  
+  const searchMessages = () => {
+    // Filter messages based on the search query
+    const filteredMessages = messages.filter((message) =>
+      message.content.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    // Set the filtered messages as highlighted messages
+    setHighlightedMessages(filteredMessages);
   };
   //! TODO
   const sendMessage = async (event) => {
@@ -247,6 +258,19 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               icon={<ArrowBackIcon />}
               onClick={() => setSelectedChat("")}
             />
+               <InputGroup maxW="300px">
+              <Input
+                placeholder="Search in chat..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                maxW="240px"
+              />
+              <InputRightElement width="4.5rem">
+                <Button h="1.75rem" size="sm" onClick={searchMessages}>
+                  <i className="fas fa-search"></i>
+                </Button>
+              </InputRightElement>
+            </InputGroup>
             {messages &&
               (!selectedChat.isGroupChat ? (
                 <>
@@ -288,9 +312,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             ) : (
               <div className="messages">
                 <ScrollableChat
-                  messages={messages}
+                   messages={highlightedMessages.length > 0 ? highlightedMessages : messages}
                   setUpdateMsg={setUpdateMsg}
                   setNewMsg={setNewMessage}
+                  searchQuery={searchQuery} 
                 />
               </div>
             )}

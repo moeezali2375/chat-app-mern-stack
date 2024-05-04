@@ -17,7 +17,7 @@ import {
   DrawerOverlay,
 } from "@chakra-ui/modal";
 import { Tooltip } from "@chakra-ui/tooltip";
-import { BellIcon, ChevronDownIcon, SettingsIcon } from "@chakra-ui/icons";
+import { BellIcon, ChevronDownIcon, DownloadIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Avatar } from "@chakra-ui/avatar";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
@@ -32,6 +32,7 @@ import { Effect } from "react-notification-badge";
 import { getSender } from "../../config/ChatLogics";
 import UserListItem from "../userAvatar/UserListItem";
 import { ChatState } from "../../Context/ChatProvider";
+import ReviewForm from "./ReviewForm";
 
 function SideDrawer() {
   const [search, setSearch] = useState("");
@@ -56,6 +57,10 @@ function SideDrawer() {
   const logoutHandler = () => {
     localStorage.removeItem("userInfo");
     history.push("/");
+  };
+
+  const handleDownloadClick = () => {
+    history.push('/exportchat');
   };
 
   const handleSearch = async (query) => {
@@ -140,10 +145,26 @@ function SideDrawer() {
         <Text fontSize="2xl" fontFamily="Work sans">
           Jutt-Chats
         </Text>
-        <div>
+     
+        <div style={{ display: "flex", alignItems: "center" }}>
+        <Button variant="ghost" onClick={handleDownloadClick}>
+        <i className="fas fa-download"></i>
+        </Button>
+        <Menu>
+        <MenuButton as={Button} bg="white">
+         <EditIcon fontSize="lg" m={1} />
+        </MenuButton>
+        <MenuList>
+         <ReviewForm user={user} type="review">
+          <MenuItem>Give Review</MenuItem>
+         </ReviewForm>
+        </MenuList>
+        </Menu>
+
+        
           <Menu>
             <MenuButton as={Button} bg="white">
-              <SettingsIcon fontSize="2xl" m={1} />
+              <SettingsIcon fontSize="lg" m={1} />
             </MenuButton>
             <MenuList>
               <FormModal user={user} type="email">
