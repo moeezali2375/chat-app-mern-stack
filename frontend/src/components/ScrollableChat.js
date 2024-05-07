@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useToast , Button } from "@chakra-ui/react";
+import { useToast, Button } from "@chakra-ui/react";
 import { Avatar } from "@chakra-ui/avatar";
 import { Tooltip } from "@chakra-ui/tooltip";
 import ScrollableFeed from "react-scrollable-feed";
@@ -20,10 +20,10 @@ import {
   MenuList,
 } from "@chakra-ui/menu";
 
-const ScrollableChat = ({ messages, setUpdateMsg, setNewMsg , searchQuery}) => {
+const ScrollableChat = ({ messages, setUpdateMsg, setNewMsg, searchQuery }) => {
   const { user } = ChatState();
   const toast = useToast();
- 
+
   const handleDeleteMsg = async (chatId, messageId, senderId) => {
     console.log(messages);
     try {
@@ -67,34 +67,35 @@ const ScrollableChat = ({ messages, setUpdateMsg, setNewMsg , searchQuery}) => {
   };
 
   const handleSpamMsg = async (inputData) => {
-    console.log(messages);
     try {
-      //   setLoading(true);
-
       const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       };
-
-      const content = "hello";
-      const { data } = await axios.get(
-        `/api/message/predict`,
-        { inputData },
-        config
-      );
-
-      toast({
-        title: "Spam Detection Working",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
+      const message = inputData;
+      const url = "/api/message/predict/" + message;
+      const { data } = await axios.get(url, config);
+      if (data.spam === 1) {
+        toast({
+          title: "Msg is Spam!",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+      } else {
+        toast({
+          title: "Msg is not Spam!",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
     } catch (error) {
       toast({
-        title: "Error Detecting Spam!",
-        // description: "Failed to Load the Search Results",
+        title: "Error while detecting Spam!",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -105,13 +106,17 @@ const ScrollableChat = ({ messages, setUpdateMsg, setNewMsg , searchQuery}) => {
   const highlightSearch = (content) => {
     if (!searchQuery.trim()) return content; // Return content as is if no search query
     const regex = new RegExp(`(${searchQuery})`, "gi");
-    return content.split(regex).map((part, index) => (
-      part.toLowerCase() === searchQuery.toLowerCase() ? 
-        <span key={index} style={{ backgroundColor: "yellow" }}>{part}</span> :
+    return content.split(regex).map((part, index) =>
+      part.toLowerCase() === searchQuery.toLowerCase() ? (
+        <span key={index} style={{ backgroundColor: "yellow" }}>
+          {part}
+        </span>
+      ) : (
         part
-    ));
+      )
+    );
   };
-  
+
   return (
     <ScrollableFeed>
       {messages &&
@@ -144,7 +149,7 @@ const ScrollableChat = ({ messages, setUpdateMsg, setNewMsg , searchQuery}) => {
                     maxWidth: "75%",
                   }}
                 >
-                   {highlightSearch(m.content)}
+                  {highlightSearch(m.content)}
                 </MenuButton>
                 <MenuList>
                   <MenuItem
@@ -177,7 +182,7 @@ const ScrollableChat = ({ messages, setUpdateMsg, setNewMsg , searchQuery}) => {
                   maxWidth: "75%",
                 }}
               >
-                 {highlightSearch(m.content)}
+                {highlightSearch(m.content)}
               </span>
             )}
           </div>

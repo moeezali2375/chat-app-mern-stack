@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post("/", protect, sendMessage);
 
-router.get("/predict",protect,predictMessage)
+router.get("/predict/:message",protect,predictMessage)
 
 router.get("/:chatId", protect, allMessages);
 
