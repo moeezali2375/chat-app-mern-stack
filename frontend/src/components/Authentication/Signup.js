@@ -43,7 +43,6 @@ const Signup = () => {
       });
       return;
     }
-    console.log(name, email, password, pic);
     try {
       const config = {
         headers: {
@@ -109,7 +108,6 @@ const Signup = () => {
         .then((res) => res.json())
         .then((data) => {
           setPic(data.url.toString());
-          console.log(data.url.toString());
           setPicLoading(false);
         })
         .catch((err) => {
