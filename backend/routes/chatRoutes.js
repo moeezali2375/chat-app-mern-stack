@@ -7,6 +7,7 @@ const {
   renameGroup,
   removeFromGroup,
   addToGroup,
+  exportChat,
 } = require("../controllers/chatControllers");
 
 const router = express.Router();
@@ -23,4 +24,5 @@ router.put("/groupadd", protect, addToGroup);
 
 router.put("/groupremove", protect, removeFromGroup);
 
+router.get("/export/:chatId", protect, exportChat);
 module.exports = router;

@@ -1,5 +1,6 @@
 const Chat = require("../models/chatModel");
 const User = require("../models/userModel");
+const Message = require("../models/messageModel");
 const asyncHandler = require("express-async-handler");
 
 const accessChats = asyncHandler(async (req, res) => {
@@ -162,6 +163,22 @@ const removeFromGroup = asyncHandler(async (req, res) => {
   }
 });
 
+const exportChat = asyncHandler(async (req, res) => {
+  const chatId = req.params.chatId;
+  try {
+    const result = await Message.find({ chat: chatId }).populate({
+      path: "sender",
+      select: "email -_id",
+    }).exec();
+    const transformedMessages = result.map(message => {
+      return `${message.sender.email}: ${message.content}`;
+    });
+    res.status(200).json(transformedMessages);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
 module.exports = {
   accessChats,
   fetchChats,
@@ -169,4 +186,5 @@ module.exports = {
   renameGroup,
   removeFromGroup,
   addToGroup,
+  exportChat,
 };
