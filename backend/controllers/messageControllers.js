@@ -106,7 +106,7 @@ const deleteMessage = asyncHandler(async (req, res) => {
 });
 
 const predictMessage = asyncHandler(async (req, res) => {
-  const { message } = req.body;
+  const message = req.params.message;
   try {
     const result = await executePython("./scripts/predict.py", [message]);
     res.status(200).json({ spam: result });
