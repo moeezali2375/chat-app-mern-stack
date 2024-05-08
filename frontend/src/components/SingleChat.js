@@ -2,7 +2,14 @@ import { FormControl } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
 import { Box, Text } from "@chakra-ui/layout";
 import "./styles.css";
-import { IconButton, Spinner, useToast , Button , InputGroup, InputRightElement} from "@chakra-ui/react";
+import {
+  IconButton,
+  Spinner,
+  useToast,
+  Button,
+  InputGroup,
+  InputRightElement,
+} from "@chakra-ui/react";
 import { getSender, getSenderFull } from "../config/ChatLogics";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -75,7 +82,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       });
     }
   };
-  
+
   const searchMessages = () => {
     // Filter messages based on the search query
     const filteredMessages = messages.filter((message) =>
@@ -84,7 +91,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     // Set the filtered messages as highlighted messages
     setHighlightedMessages(filteredMessages);
   };
-  //! TODO
+
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
       socket.emit("stop typing", selectedChat._id);
@@ -116,6 +123,43 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           position: "bottom",
         });
       }
+    }
+  };
+
+  const exportChat = async (event) => {
+    try {
+      // Send a GET request to the API to fetch data
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const url = "/api/chat/export/" + selectedChat._id;
+      const response = await axios.get(url, config);
+
+      // Extract data from the response
+      const responseData = response.data;
+      console.log(responseData);
+
+      const newTab = window.open("about:blank", "_blank");
+
+      // Add content to the new tab after a short delay
+      setTimeout(() => {
+        // Populate the new tab with each message
+        responseData.forEach((message) => {
+          newTab.document.write(`<div>${message}</div>`);
+        });
+      }, 500); // Adjust delay as needed
+    } catch (error) {
+      toast({
+        title: "Error exporting chat",
+        // description: "Failed to Load the Search Results",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
     }
   };
 
@@ -153,21 +197,24 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     });
   });
-  
+
   useEffect(() => {
-    socket.on("edit message recieved", (newMessageRecieved,updatedMessages) => {
-      if (
-        !selectedChatCompare ||
-        selectedChatCompare._id !== newMessageRecieved.chat._id
-      ) {
-        if (!notification.includes(newMessageRecieved)) {
-          setNotification([newMessageRecieved, ...notification]);
-          setFetchAgain(!fetchAgain);
+    socket.on(
+      "edit message recieved",
+      (newMessageRecieved, updatedMessages) => {
+        if (
+          !selectedChatCompare ||
+          selectedChatCompare._id !== newMessageRecieved.chat._id
+        ) {
+          if (!notification.includes(newMessageRecieved)) {
+            setNotification([newMessageRecieved, ...notification]);
+            setFetchAgain(!fetchAgain);
+          }
+        } else {
+          setMessages([...updatedMessages, newMessageRecieved]);
         }
-      } else {
-        setMessages([...updatedMessages,newMessageRecieved]);
       }
-    });
+    );
   });
 
   const typingHandler = (e) => {
@@ -223,7 +270,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         //TODO
         messages = messages.filter((message) => message._id !== updateMsg._id);
         setMessages([...messages, data]);
-        socket.emit("edit message send",data,messages);
+        socket.emit("edit message send", data, messages);
       } catch (error) {
         toast({
           title: "You can only edit a message one time!",
@@ -258,7 +305,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               icon={<ArrowBackIcon />}
               onClick={() => setSelectedChat("")}
             />
-               <InputGroup maxW="300px">
+            <InputGroup maxW="300px">
               <Input
                 placeholder="Search in chat..."
                 value={searchQuery}
@@ -275,6 +322,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               (!selectedChat.isGroupChat ? (
                 <>
                   {getSender(user, selectedChat.users)}
+                  <Button variant="ghost" onClick={exportChat}>
+                    <i className="fas fa-download"></i>
+                  </Button>
                   <ProfileModal
                     user={getSenderFull(user, selectedChat.users)}
                   />
@@ -282,6 +332,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               ) : (
                 <>
                   {selectedChat.chatName.toUpperCase()}
+                  <Button variant="ghost" onClick={exportChat}>
+                    <i className="fas fa-download"></i>
+                  </Button>
                   <UpdateGroupChatModal
                     fetchMessages={fetchMessages}
                     fetchAgain={fetchAgain}
@@ -312,10 +365,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             ) : (
               <div className="messages">
                 <ScrollableChat
-                   messages={highlightedMessages.length > 0 ? highlightedMessages : messages}
+                  messages={
+                    highlightedMessages.length > 0
+                      ? highlightedMessages
+                      : messages
+                  }
                   setUpdateMsg={setUpdateMsg}
                   setNewMsg={setNewMessage}
-                  searchQuery={searchQuery} 
+                  searchQuery={searchQuery}
                 />
               </div>
             )}

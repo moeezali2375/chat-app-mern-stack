@@ -17,7 +17,7 @@ import {
   DrawerOverlay,
 } from "@chakra-ui/modal";
 import { Tooltip } from "@chakra-ui/tooltip";
-import { BellIcon, ChevronDownIcon, DownloadIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons";
+import { BellIcon, ChevronDownIcon,  EditIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Avatar } from "@chakra-ui/avatar";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
@@ -147,9 +147,6 @@ function SideDrawer() {
         </Text>
      
         <div style={{ display: "flex", alignItems: "center" }}>
-        <Button variant="ghost" onClick={handleDownloadClick}>
-        <i className="fas fa-download"></i>
-        </Button>
         <Menu>
         <MenuButton as={Button} bg="white">
          <EditIcon fontSize="lg" m={1} />
