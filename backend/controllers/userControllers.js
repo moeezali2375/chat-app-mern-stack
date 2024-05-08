@@ -101,8 +101,18 @@ const checkEmail = asyncHandler(async (req, res) => {
 const changeEmail = asyncHandler(async (req, res) => {
   const { email } = req.body;
   try {
-    await User.findByIdAndUpdate(req.user._id, { email: email }, { new: true });
-    res.status(200).send("Email Changed Successfully!");
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { email: email },
+      { new: true }
+    );
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      pic: user.pic,
+      token: generateToken(user._id),
+    });
   } catch (error) {
     res.status(400).send(error.message);
   }

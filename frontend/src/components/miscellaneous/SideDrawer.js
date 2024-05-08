@@ -43,6 +43,7 @@ function SideDrawer() {
   const {
     setSelectedChat,
     user,
+    setUser,
     notification,
     setNotification,
     chats,
