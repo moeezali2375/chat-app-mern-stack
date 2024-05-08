@@ -4,6 +4,7 @@ const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 const path = require("path");
 const app = express();
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
+app.use("/api/review", reviewRoutes);
 
 const __dirname1 = path.resolve();
 
@@ -70,15 +72,17 @@ io.on("connection", (socket) => {
       socket.in(user._id).emit("message recieved", newMessageRecieved);
     });
   });
-  
-  socket.on("edit message send", (newMessageRecieved,messages) => {
+
+  socket.on("edit message send", (newMessageRecieved, messages) => {
     var chat = newMessageRecieved.chat;
     if (!chat.users) return console.log("chat.users not defined");
     chat.users.forEach((user) => {
       if (user._id == newMessageRecieved.sender._id) return;
       // console.log(messages);
       // console.log(newMessageRecieved);
-      socket.in(user._id).emit("edit message recieved", newMessageRecieved,messages);
+      socket
+        .in(user._id)
+        .emit("edit message recieved", newMessageRecieved, messages);
     });
   });
 
