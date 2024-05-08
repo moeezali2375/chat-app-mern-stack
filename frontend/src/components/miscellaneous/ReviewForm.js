@@ -1,6 +1,21 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Button, Input, FormControl, FormLabel, FormErrorMessage, VStack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, MenuItem } from "@chakra-ui/react";
+import {
+  Button,
+  Input,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  VStack,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  MenuItem,
+} from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import RatingReview from "./RatingReview"; // Adjust the import path accordi
 
@@ -18,11 +33,14 @@ const ReviewForm = ({ user }) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
+      await axios.post(
+        "/api/review",
+        { review, rating },
+        config
+      );
 
-      // Your submission logic here (API call, etc.)
-      // For example:
-      // await axios.post("/api/submitReview", { review }, config);
-
+      setReview("");
+      setRating(0);
       toast({
         title: "Review Submitted Successfully",
         status: "success",
@@ -62,8 +80,12 @@ const ReviewForm = ({ user }) => {
             </VStack>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={2} onClick={handleSubmit}>Submit</Button>
-            <Button colorScheme="red" onClick={() => setIsOpen(false)}>Cancel</Button>
+            <Button colorScheme="blue" mr={2} onClick={handleSubmit}>
+              Submit
+            </Button>
+            <Button colorScheme="red" onClick={() => setIsOpen(false)}>
+              Cancel
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
