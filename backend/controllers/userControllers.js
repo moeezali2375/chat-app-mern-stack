@@ -85,7 +85,7 @@ const changePassword = asyncHandler(async (req, res) => {
 });
 
 const checkEmail = asyncHandler(async (req, res) => {
-  const email  = req.query.email;
+  const email = req.query.email;
   try {
     const user = await User.findOne({ email: email });
     if (user) {
@@ -99,23 +99,13 @@ const checkEmail = asyncHandler(async (req, res) => {
 });
 
 const changeEmail = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email } = req.body;
   try {
-    const user = await User.findById(req.user._id);
-    if (await user.matchPassword(password)) {
-      await User.findByIdAndUpdate(
-        req.user._id,
-        { email: email },
-        { new: true }
-      );
-    } else {
-      throw new Error("Your password does not match!");
-    }
+    await User.findByIdAndUpdate(req.user._id, { email: email }, { new: true });
     res.status(200).send("Email Changed Successfully!");
   } catch (error) {
     res.status(400).send(error.message);
   }
-  //! Client side should refresh the app so that changes take place
 });
 
 module.exports = {
