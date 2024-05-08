@@ -25,23 +25,18 @@ const ScrollableChat = ({ messages, setUpdateMsg, setNewMsg, searchQuery }) => {
   const toast = useToast();
 
   const handleDeleteMsg = async (chatId, messageId, senderId) => {
-    console.log(messages);
     try {
-      //   setLoading(true);
-
       const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       };
 
-      // const content = "hello";
-      const { data } = await axios.delete(
-        `/api/message/`,
-        { chatId, messageId, senderId },
-        config
-      );
-
+      await axios.delete(`/api/message/`, {
+        data: { chatId, messageId, senderId },
+        ...config,
+      });
+      window.location.reload();
       toast({
         title: "Message Deleted Successfully",
         status: "success",
