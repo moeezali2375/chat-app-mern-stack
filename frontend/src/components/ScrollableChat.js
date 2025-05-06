@@ -159,26 +159,30 @@ const ScrollableChat = ({ messages, setUpdateMsg, setNewMsg, searchQuery }) => {
                     Edit Message
                   </MenuItem>
                   <MenuDivider />
+                </MenuList>
+              </Menu>
+            ) : (
+              <Menu>
+                <MenuButton
+                  style={{
+                    backgroundColor: `${
+                      m.sender._id === user._id ? "#BEE3F8" : "#B9F5D0"
+                    }`,
+                    marginLeft: isSameSenderMargin(messages, m, i, user._id),
+                    marginTop: isSameUser(messages, m, i, user._id) ? 3 : 10,
+                    borderRadius: "20px",
+                    padding: "5px 15px",
+                    maxWidth: "75%",
+                  }}
+                >
+                  {highlightSearch(m.content)}
+                </MenuButton>
+                <MenuList>
                   <MenuItem onClick={() => handleSpamMsg(m.content)}>
                     Detect Spam
                   </MenuItem>
                 </MenuList>
               </Menu>
-            ) : (
-              <span
-                style={{
-                  backgroundColor: `${
-                    m.sender._id === user._id ? "#BEE3F8" : "#B9F5D0"
-                  }`,
-                  marginLeft: isSameSenderMargin(messages, m, i, user._id),
-                  marginTop: isSameUser(messages, m, i, user._id) ? 3 : 10,
-                  borderRadius: "20px",
-                  padding: "5px 15px",
-                  maxWidth: "75%",
-                }}
-              >
-                {highlightSearch(m.content)}
-              </span>
             )}
           </div>
         ))}
